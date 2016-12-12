@@ -3,6 +3,16 @@ defmodule Recaptcha2Client do
   @config Application.get_env(:recaptcha_2_client, :config)
   plug Tesla.Middleware.BaseUrl, @config[:captcha_url]
 
+  @doc """
+    Check in the Recaptcha API if the given captcha response is correct
+
+    ```
+    # Example using with phoenix
+    captcha_response = params["g-recaptcha-response"]
+    Recaptcha2Client.verify(captcha_response, conn.remote_ip)
+    ```
+  """
+  @spec verify(String.t, String.t) :: {:ok, true} | {:error, String.t}
   def verify(captcha_response, remote_ip \\ nil) do
     request_params = %{
       secret: @config[:private_key],
@@ -12,6 +22,7 @@ defmodule Recaptcha2Client do
     verify_http_status(http_response)
   end
 
+  @spec verify_http_status(struct()) :: {:ok, true} | {:error, String.t}
   defp verify_http_status(http_response = %{status: 200}) do
     verify_captcha_response(Poison.decode!(http_response.body))
   end

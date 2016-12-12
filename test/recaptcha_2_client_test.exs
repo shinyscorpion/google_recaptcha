@@ -11,31 +11,31 @@ defmodule Recaptcha2ClientTest do
 
   test "returns true when captcha is right" do
     with_mock Tesla, [perform_request: fn(_params, _options) -> %{body: @mock_response_success, status: 200} end] do
-      assert Recaptcha2Client.verify(@remote_ip, @captcha_response) == {:ok, true}
+      assert Recaptcha2Client.verify(@captcha_response, @remote_ip) == {:ok, true}
     end
   end
 
   test "returns error when captcha is wrong" do
     with_mock Tesla, [perform_request: fn(_params, _options) -> %{body: @mock_response_invalid_captcha, status: 200} end] do
-      assert Recaptcha2Client.verify(@remote_ip, @captcha_response) == {:error, "captcha is wrong"}
+      assert Recaptcha2Client.verify(@captcha_response, @remote_ip) == {:error, "captcha is wrong"}
     end
   end
 
   test "returns error when captcha is expired" do
     with_mock Tesla, [perform_request: fn(_params, _options) -> %{body: @mock_response_expired_captcha, status: 200} end] do
-      assert Recaptcha2Client.verify(@remote_ip, @captcha_response) == {:error, "captcha timed out"}
+      assert Recaptcha2Client.verify(@captcha_response, @remote_ip) == {:error, "captcha timed out"}
     end
   end
 
   test "returns error when something goes wrong in recaptcha" do
     with_mock Tesla, [perform_request: fn(_params, _options) -> %{body: "error", status: 500} end] do
-      assert Recaptcha2Client.verify(@remote_ip, @captcha_response) == {:error, "problem connecting with recaptcha"}
+      assert Recaptcha2Client.verify(@captcha_response, @remote_ip) == {:error, "problem connecting with recaptcha"}
     end
   end
 
   test "returns errors when is not a 200 response" do
     with_mock Tesla, [perform_request: fn(_params, _options) -> %{body: "error", status: 400} end] do
-      assert Recaptcha2Client.verify(@remote_ip, @captcha_response) == {:error, "problem connecting with recaptcha"}
+      assert Recaptcha2Client.verify(@captcha_response, @remote_ip) == {:error, "problem connecting with recaptcha"}
     end
   end
 end

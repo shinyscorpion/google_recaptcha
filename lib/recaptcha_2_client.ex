@@ -3,7 +3,7 @@ defmodule Recaptcha2Client do
   @config Application.get_env(:recaptcha_2_client, :config)
   plug Tesla.Middleware.BaseUrl, @config[:captcha_url]
 
-  def verify(remote_ip, captcha_response) do
+  def verify(captcha_response, remote_ip \\ nil) do
     request_params = %{
       secret: @config[:private_key],
       response: captcha_response,

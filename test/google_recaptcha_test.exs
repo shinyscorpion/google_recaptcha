@@ -46,4 +46,32 @@ defmodule GoogleRecaptchaTest do
       assert {:error, :recaptcha_error} == verify(@captcha_response, @remote_ip)
     end
   end
+
+  describe "enabled?" do
+    test "returns true when config is set" do
+      assert enabled?()
+    end
+
+    test "returns false when config is set to false" do
+      :meck.expect Application, :fetch_env!, fn(:google_recaptcha, :enabled) ->  false end
+
+      refute enabled?()
+
+      :meck.unload Application
+    end
+  end
+
+  describe "public_key" do
+    test "returns nil when configuration is not set" do
+      refute public_key()
+    end
+
+    test "returns key when configuration is set" do
+      :meck.expect Application, :fetch_env!, fn(:google_recaptcha, :public_key) ->  "" end
+
+      assert public_key()
+
+      :meck.unload Application
+    end
+  end
 end

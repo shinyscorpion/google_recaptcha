@@ -1,8 +1,8 @@
-defmodule Recaptcha2Client.Mixfile do
+defmodule GoogleRecaptcha.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :recaptcha_2_client,
+    [app: :google_recaptcha,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,

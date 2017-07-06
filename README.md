@@ -1,6 +1,6 @@
-# Recaptcha2Client
+# Google Recaptcha
 
-Simple Recaptcha Client
+Google Recaptcha Client
 
 ## Installation
 
@@ -10,15 +10,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
     ```elixir
     def deps do
-      [{:recaptcha_2_client, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `recaptcha_2_client` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:recaptcha_2_client]]
+      [{:google_recaptcha, "~> 0.1.0"}]
     end
     ```
 
@@ -34,10 +26,6 @@ Set the private and public key
 ## Usage
 
   ```elixir
-  Recaptcha2Client.verify(captcha_response, client_ip_addres)
+  GoogleRecaptcha.verify(captcha_response, client_ip_addres)
   #captcha_response => g-recaptcha-response POST paramter from captcha widget
   ```
-
-### TODO
-
-* Display Recaptcha widget

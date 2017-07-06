@@ -1,4 +1,4 @@
-defmodule Recaptcha2Client do
+defmodule GoogleRecaptcha do
   use Tesla
   @config Application.get_env(:recaptcha_2_client, :config)
   plug Tesla.Middleware.BaseUrl, @config[:captcha_url]

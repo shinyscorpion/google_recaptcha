@@ -1,45 +1,72 @@
 defmodule GoogleRecaptcha do
-  use Tesla
-  @config Application.get_env(:recaptcha_2_client, :config)
-  plug Tesla.Middleware.BaseUrl, @config[:captcha_url]
+  @moduledoc """
+  HTTP client to make requests to Google Recaptcha API.
+
+  API keys is needed to get the client working, you can generate [here](https://www.google.com/recaptcha/admin)
+
+  Then, set the secret env var:
+
+      export RECAPTCHA_SECRET_KEY="34h134oh"
+
+  [Google Recaptcha Docs for more information](https://developers.google.com/recaptcha/docs/verify)
+  """
+
+  require Logger
+
+  @open_timeout 10_000
+  @recv_timeout 10_000
 
   @doc """
-    Check in the Recaptcha API if the given captcha response is correct
+  Check in the Recaptcha API if the given captcha response is correct.
 
-    ```
-    # Example using with phoenix
-    captcha_response = params["g-recaptcha-response"]
-    Recaptcha2Client.verify(captcha_response, conn.remote_ip)
-    ```
+  ## Examples
+
+      # Doc how to generate the captcha widget: https://developers.google.com/recaptcha/docs/display#auto_render
+      captcha_response = params["g-recaptcha-response"]
+      Recaptcha2Client.verify(captcha_response, conn.remote_ip)
+      :ok
+
+      Recaptcha2Client.verify("wrong_capcha", conn.remote_ip)
+      {:error, :invalid_captcha}
+
   """
-  @spec verify(String.t, String.t) :: {:ok, true} | {:error, String.t}
+  @spec verify(String.t, String.t | nil) :: :ok | {:error, atom}
   def verify(captcha_response, remote_ip \\ nil) do
-    request_params = %{
-      secret: @config[:private_key],
+    request_body = [
+      secret: recaptcha_secret_key(),
       response: captcha_response,
-      remoteip: remote_ip}
-    http_response = post(@config[:verify_api], "", query: request_params)
-    verify_http_status(http_response)
+      remoteip: remote_ip]
+
+    options = [
+      ssl: [{:versions, [:'tlsv1.2']}],
+      recv_timeout: @recv_timeout,
+      timeout: @open_timeout
+    ]
+
+    HTTPoison.post!(recaptcha_url(), {:form, request_body}, [], options).body
+    |> Poison.decode!
+    |> parse_response
   end
 
-  @spec verify_http_status(struct()) :: {:ok, true} | {:error, String.t}
-  defp verify_http_status(http_response = %{status: 200}) do
-    verify_captcha_response(Poison.decode!(http_response.body))
+  @spec parse_response(map) :: :ok | {:error, atom}
+  defp parse_response(%{"success" => true}) do
+    :ok
   end
 
-  defp verify_http_status(%{status: _}) do
-    {:error, "problem connecting with recaptcha"}
+  defp parse_response(%{"success" => false, "error-codes" => errors}) do
+    cond do
+      Enum.member?(errors, "invalid-input-secret") -> {:error, :invalid_secret}
+      Enum.member?(errors, "invalid-input-response") -> {:error, :invalid_captcha}
+      Enum.member?(errors, "invalid-keys") -> {:error, :invalid_keys} #public and secret does not match
+      true ->
+        Logger.info "Recaptcha error: #{inspect errors}"
+        {:error, :recaptcha_error}
+    end
   end
 
-  defp verify_captcha_response(%{"success" => true}) do
-    {:ok, true}
-  end
+  @spec recaptcha_url() :: String.t | no_return
+  defp recaptcha_url, do: Application.fetch_env!(:google_recaptcha, :api_url)
 
-  defp verify_captcha_response(%{"success" => false, "error-codes" => ["invalid-input-response"] }) do
-    {:error, "captcha is wrong"}
-  end
-
-  defp verify_captcha_response(%{"success" => false}) do
-    {:error, "captcha timed out"}
-  end
+  @spec recaptcha_secret_key() :: String.t | no_return
+  defp recaptcha_secret_key, do: Application.fetch_env!(:google_recaptcha, :api_url)
 end

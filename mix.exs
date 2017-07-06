@@ -15,7 +15,7 @@ defmodule GoogleRecaptcha.Mixfile do
   end
 
   defp deps do
-    [{:tesla, "~> 0.5"},
+    [{:httpoison, "~> 0.11.0"},
      {:poison, ">= 1.0.0"},
      {:mock, "~> 0.1.1", only: :test}]
   end

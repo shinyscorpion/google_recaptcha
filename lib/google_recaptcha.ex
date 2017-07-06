@@ -9,7 +9,7 @@ defmodule GoogleRecaptcha do
       config :google_recaptcha,
         api_url: "https://www.google.com/recaptcha/api/siteverify",
         public_key: "YOUR_PUBLIC_KEY",
-        private_key: "YOUR_SECRET_KEY",
+        secret_key: "YOUR_SECRET_KEY"
 
   Check the Google Recaptcha Docs for [more information](https://developers.google.com/recaptcha/docs/verify)
 

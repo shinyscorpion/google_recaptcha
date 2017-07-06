@@ -24,7 +24,7 @@ And set the keys in your project configuration file:
 config :google_recaptcha,
   api_url: "https://www.google.com/recaptcha/api/siteverify",
   public_key: "YOUR_PUBLIC_KEY",
-  private_key: "YOUR_SECRET_KEY",
+  secret_key: "YOUR_SECRET_KEY",
   enabled: true # You may set false for development
 ```
 

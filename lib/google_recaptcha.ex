@@ -10,11 +10,7 @@ defmodule GoogleRecaptcha do
 
   [Google Recaptcha Docs for more information](https://developers.google.com/recaptcha/docs/verify)
   """
-
-  require Logger
-
-  @open_timeout 10_000
-  @recv_timeout 10_000
+  alias GoogleRecaptcha.Client
 
   @doc """
   Check in the Recaptcha API if the given captcha response is correct.
@@ -32,41 +28,26 @@ defmodule GoogleRecaptcha do
   """
   @spec verify(String.t, String.t | nil) :: :ok | {:error, atom}
   def verify(captcha_response, remote_ip \\ nil) do
-    request_body = [
-      secret: recaptcha_secret_key(),
-      response: captcha_response,
-      remoteip: remote_ip]
-
-    options = [
-      ssl: [{:versions, [:'tlsv1.2']}],
-      recv_timeout: @recv_timeout,
-      timeout: @open_timeout
-    ]
-
-    HTTPoison.post!(recaptcha_url(), {:form, request_body}, [], options).body
-    |> Poison.decode!
-    |> parse_response
+    Client.verify(captcha_response, remote_ip)
   end
 
-  @spec parse_response(map) :: :ok | {:error, atom}
-  defp parse_response(%{"success" => true}) do
-    :ok
-  end
+  @doc"""
+  Helper function to check if the captcha is enabled.
 
-  defp parse_response(%{"success" => false, "error-codes" => errors}) do
-    cond do
-      Enum.member?(errors, "invalid-input-secret") -> {:error, :invalid_secret}
-      Enum.member?(errors, "invalid-input-response") -> {:error, :invalid_captcha}
-      Enum.member?(errors, "invalid-keys") -> {:error, :invalid_keys} #public and secret does not match
-      true ->
-        Logger.info "Recaptcha error: #{inspect errors}"
-        {:error, :recaptcha_error}
-    end
-  end
+  Used for development purpouse, captcha is enabled by default.
+  You can change this option overriding the Recaptcha configuration.
 
-  @spec recaptcha_url() :: String.t | no_return
-  defp recaptcha_url, do: Application.fetch_env!(:google_recaptcha, :api_url)
+      # config/dev.exs
+      config :google_recaptcha, enabled: false
+  """
+  @spec enabled? :: boolean
+  def enabled?, do: Application.fetch_env!(:google_recaptcha, :enabled)
 
-  @spec recaptcha_secret_key() :: String.t | no_return
-  defp recaptcha_secret_key, do: Application.fetch_env!(:google_recaptcha, :api_url)
+  @doc"""
+  Public key to be used in google recaptcha widget.
+
+  For more information how to generate/display the recaptcha widget, check [here](https://developers.google.com/recaptcha/docs/display#auto_render).
+  """
+  @spec public_key :: String.t
+  def public_key, do: Application.fetch_env!(:google_recaptcha, :public_key)
 end

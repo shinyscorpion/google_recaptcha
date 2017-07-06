@@ -19,6 +19,19 @@ defmodule GoogleRecaptcha.Mixfile do
       [
         main: "GoogleRecaptcha",
         extras: ["README.md"],
+      ],
+
+      # Test
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
+      dialyzer: [
+        ignore_warnings: "dialyzer.ignore-warnings",
+        plt_add_deps: true
       ]
     ]
   end
@@ -41,8 +54,8 @@ defmodule GoogleRecaptcha.Mixfile do
       {:poison, ">= 1.0.0"},
 
       # dev/test
-      {:ex_doc, "~> 0.14", only: :dev, runtime: false},
-      {:mock, "~> 0.1.1", only: :test}
+      {:analyze, ">= 0.0.0", only: [:dev, :test], runtime: false, override: true},
+      {:meck, "~> 0.8", only: :test},
     ]
   end
 end

@@ -4,10 +4,12 @@ defmodule GoogleRecaptcha do
 
   GoogleRecaptcha need the API keys to work, which you can generate [here](https://www.google.com/recaptcha/admin).
 
-  After create the API keys, you should set the given env. variables:
+  After create the API keys, you should set the given keys in the config file:
 
-      export RECAPTCHA_SECRET_KEY="YOUR_SECRET_KEY"
-      export RECAPTCHA_PUBLIC_KEY="YOUR_PUBLIC_KEY"
+      config :google_recaptcha,
+        api_url: "https://www.google.com/recaptcha/api/siteverify",
+        public_key: "YOUR_PUBLIC_KEY",
+        private_key: "YOUR_SECRET_KEY",
 
   Check the Google Recaptcha Docs for [more information](https://developers.google.com/recaptcha/docs/verify)
 
@@ -63,16 +65,12 @@ defmodule GoogleRecaptcha do
       config :google_recaptcha, enabled: false
   """
   @spec enabled? :: boolean
-  def enabled?, do: Application.fetch_env!(:google_recaptcha, :enabled)
+  def enabled?, do: Application.get_env(:google_recaptcha, :enabled, true)
 
   @doc"""
   Public key to be used in google recaptcha widget.
 
-  You can set the public key simply exporting the variabble `RECAPTCHA_PUBLIC_KEY`:
-
-      export RECAPTCHA_PUBLIC_KEY="YOUR_PUBLIC_KEY"
-
-  or overriding the recaptcha config:
+  You can set the public key simply setting the recaptcha configuration:
 
       # config/dev.exs
       config :google_recaptcha, public_key: "YOUR_PUBLIC_KEY"
@@ -80,5 +78,5 @@ defmodule GoogleRecaptcha do
   For more information how to generate/display the recaptcha widget, check [here](https://developers.google.com/recaptcha/docs/display#auto_render).
   """
   @spec public_key :: String.t
-  def public_key, do: Application.fetch_env!(:google_recaptcha, :public_key)
+  def public_key, do: Application.get_env(:google_recaptcha, :public_key)
 end

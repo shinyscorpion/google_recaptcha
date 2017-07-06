@@ -18,14 +18,7 @@ Google Recaptcha API Client for Elixir.
 
 API keys is needed to get the client working, you can generate [here](https://www.google.com/recaptcha/admin)
 
-Then set the private and public key:
-
-```bash
-export RECAPTCHA_PUBLIC_KEY=YOUR_PUBLIC_KEY
-export RECAPTCHA_SECRET_KEY=YOUR_SECRET_KEY
-``` 
-
-You can also override the configuration in yout `config/config.exs` file: 
+And set the keys in your project configuration file:
 
 ```elixir
 config :google_recaptcha,

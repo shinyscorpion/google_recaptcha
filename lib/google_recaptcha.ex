@@ -46,6 +46,15 @@ defmodule GoogleRecaptcha do
   @doc"""
   Public key to be used in google recaptcha widget.
 
+  You can set the public key simply exporting the variabble `RECAPTCHA_PUBLIC_KEY`:
+
+      export RECAPTCHA_PUBLIC_KEY="YOUR_PUBLIC_KEY"
+
+  or overriding the recaptcha config:
+
+      # config/dev.exs
+      config :google_recaptcha, public_key: "YOUR_PUBLIC_KEY"
+
   For more information how to generate/display the recaptcha widget, check [here](https://developers.google.com/recaptcha/docs/display#auto_render).
   """
   @spec public_key :: String.t

@@ -1,18 +1,18 @@
 # Google Recaptcha
 
-Google Recaptcha Client
+Google Recaptcha API Client for Elixir.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `recaptcha_2_client` to your list of dependencies in `mix.exs`:
+  1. Add `google_recaptcha` to your list of dependencies in `mix.exs`:
 
   ```elixir
   def deps do
     [{:google_recaptcha, "~> 0.1.0"}]
   end
   ```
+
+  2. Run `mix deps.get` to install it.
 
 ## Configuration
 
@@ -34,6 +34,10 @@ config :google_recaptcha,
   private_key: "YOUR_SECRET_KEY",
   enabled: true # You may set false for development
 ```
+
+## Documentation
+
+  * https://hexdocs.pm/google_recaptcha/
 
 ## Examples
 

@@ -9,6 +9,8 @@ defmodule GoogleRecaptcha.Mixfile do
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       deps: deps(),
+      package: package(),
+      description: "Google Recaptcha API Client",
 
       # Docs
       name: "Google Recaptcha",
@@ -18,6 +20,14 @@ defmodule GoogleRecaptcha.Mixfile do
         main: "GoogleRecaptcha",
         extras: ["README.md"],
       ]
+    ]
+  end
+
+  defp package do
+    [
+      licenses: ["MIT"],
+      maintainers: ["Ricardo Perez"],
+      links: %{"GitHub" => "https://github.com/ricardoperez/google_recaptcha"}
     ]
   end
 

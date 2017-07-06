@@ -33,7 +33,7 @@ defmodule GoogleRecaptcha.Client do
     cond do
       Enum.member?(errors, "invalid-input-secret") -> {:error, :invalid_secret}
       Enum.member?(errors, "invalid-input-response") -> {:error, :invalid_captcha}
-      Enum.member?(errors, "invalid-keys") -> {:error, :invalid_keys} #public and secret does not match
+      Enum.member?(errors, "invalid-keys") -> {:error, :invalid_keys}
       true ->
         Logger.info "Recaptcha error: #{inspect errors}"
         {:error, :recaptcha_error}

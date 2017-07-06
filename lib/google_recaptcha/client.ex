@@ -44,5 +44,5 @@ defmodule GoogleRecaptcha.Client do
   defp recaptcha_url, do: Application.fetch_env!(:google_recaptcha, :api_url)
 
   @spec recaptcha_secret_key() :: String.t | no_return
-  defp recaptcha_secret_key, do: Application.fetch_env!(:google_recaptcha, :api_url)
+  defp recaptcha_secret_key, do: Application.fetch_env!(:google_recaptcha, :secret_key)
 end

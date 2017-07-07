@@ -73,7 +73,11 @@ defmodule GoogleRecaptcha do
   """
   @spec valid?(String.t, String.t | nil) :: boolean
   def valid?(captcha_response, remote_ip \\ nil) do
-    verify(captcha_response, remote_ip) == :ok
+    if enabled?() do
+      verify(captcha_response, remote_ip) == :ok
+    else
+      true
+    end
   end
 
   @doc"""

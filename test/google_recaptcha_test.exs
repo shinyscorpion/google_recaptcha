@@ -56,6 +56,14 @@ defmodule GoogleRecaptchaTest do
       assert valid?(@captcha_response, @remote_ip)
     end
 
+    test "returns true when captcha is disabled" do
+      :meck.expect Application, :get_env, fn(:google_recaptcha, :enabled, _) -> false end
+
+      assert valid?(@captcha_response, @remote_ip)
+
+      :meck.unload Application
+    end
+
     test "returns false when captcha is wrong" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
         %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-input-response"]})}
@@ -80,14 +88,6 @@ defmodule GoogleRecaptchaTest do
 
     test "returns false when config is set to false" do
       :meck.expect Application, :get_env, fn(:google_recaptcha, :enabled, _) -> false end
-
-      refute enabled?()
-
-      :meck.unload Application
-    end
-
-    test "returns true when config is not set" do
-      :meck.expect Application, :get_env, fn(:google_recaptcha, :enabled, _) -> nil end
 
       refute enabled?()
 

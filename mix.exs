@@ -14,7 +14,7 @@ defmodule GoogleRecaptcha.Mixfile do
 
       # Docs
       name: "Google Recaptcha",
-      source_url: "https://github.com/ricardoperez/google_recaptcha",
+      source_url: "https://github.com/shinyscorpion/google_recaptcha",
       docs:
       [
         main: "GoogleRecaptcha",
@@ -39,8 +39,8 @@ defmodule GoogleRecaptcha.Mixfile do
   defp package do
     [
       licenses: ["MIT"],
-      maintainers: ["Ricardo Perez"],
-      links: %{"GitHub" => "https://github.com/ricardoperez/google_recaptcha"}
+      maintainers: ["Elliott Hilaire", "Francesco Grammatico", "Ian Luites", "Ricardo Perez", "Tatsuya Ono"],
+      links: %{"GitHub" => "https://github.com/shinyscorpion/google_recaptcha"}
     ]
   end
 

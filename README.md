@@ -8,7 +8,7 @@ Google Recaptcha API Client for Elixir.
 
   ```elixir
   def deps do
-    [{:google_recaptcha, "~> 0.1.0"}]
+    [{:google_recaptcha, "~> 0.1.4"}]
   end
   ```
 
@@ -32,9 +32,31 @@ config :google_recaptcha,
 
   * https://hexdocs.pm/google_recaptcha/
 
-## Examples
+## Usage
+
+Check if the captcha is valid, returns `:ok` when it is valid and `{:error, :error_type}` when something goes wrong:
 
 ```elixir
-GoogleRecaptcha.verify(captcha_response, client_ip_addres)
-#captcha_response => g-recaptcha-response POST paramter from captcha widget
+# When captcha is valid
+iex> GoogleRecaptcha.verify(captcha_response, client_ip_addres)
+...> :ok
+
+iex> GoogleRecaptcha.verify(captcha_response, client_ip_addres)
+...> {:error, :invalid_captcha}
+```
+
+Check if the captcha is valid(check if the recaptcha is enabled), in this case returns bolean(any error will be return as `false`):
+
+```elixir
+# When captcha is valid
+iex> GoogleRecaptcha.valid?(captcha_response, client_ip_addres)
+...> true
+
+# When captcha is disabled
+iex> GoogleRecaptcha.valid?(captcha_response, client_ip_addres)
+...> true
+
+# Wrong captcha response
+iex> GoogleRecaptcha.verify(wrong_captcha_response, client_ip_addres)
+...> false
 ```

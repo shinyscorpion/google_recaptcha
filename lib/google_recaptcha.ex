@@ -55,11 +55,31 @@ defmodule GoogleRecaptcha do
     Client.verify(captcha_response, remote_ip)
   end
 
+  @doc """
+  Check if the given captcha is correct, returns `true` if is valid, otherwise `false`.
+
+  For specific and detailed error, check `verify/2`.
+
+  ## Examples
+
+      captcha_response = params["g-recaptcha-response"]
+      valid?(captcha_response, "127.0.0.1")
+      true
+
+      # Wrong captcha:
+      valid?("wrong_capcha", "127.0.0.1")
+      false
+
+  """
+  @spec valid?(String.t, String.t | nil) :: boolean
+  def valid?(captcha_response, remote_ip \\ nil) do
+    verify(captcha_response, remote_ip) == :ok
+  end
+
   @doc"""
   Helper function to check if the captcha is enabled.
 
-  Used for development purpouse, captcha is enabled by default.
-  You can change it overriding the Recaptcha configuration:
+  Used for development purpouse, captcha is enabled by default.  You can change it overriding the Recaptcha configuration:
 
       # config/dev.exs
       config :google_recaptcha, enabled: false

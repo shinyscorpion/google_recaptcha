@@ -47,6 +47,32 @@ defmodule GoogleRecaptchaTest do
     end
   end
 
+  describe "valid?" do
+    test "returns true when captcha is correct" do
+      :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
+        %{body: Poison.encode!(%{"success" => true, "challenge_ts" => "2017-06-30T15:45:07Z", "hostname" => "localhost"})}
+      end
+
+      assert valid?(@captcha_response, @remote_ip)
+    end
+
+    test "returns false when captcha is wrong" do
+      :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
+        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-input-response"]})}
+      end
+
+      refute valid?(@captcha_response, @remote_ip)
+    end
+
+    test "returns false when secret key is wrong" do
+      :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
+        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-input-secret"]})}
+      end
+
+      refute valid?(@captcha_response, @remote_ip)
+    end
+  end
+
   describe "enabled?" do
     test "returns true when config is set" do
       assert enabled?()

@@ -57,6 +57,6 @@ iex> GoogleRecaptcha.valid?(captcha_response, client_ip_addres)
 ...> true
 
 # Wrong captcha response
-iex> GoogleRecaptcha.verify(wrong_captcha_response, client_ip_addres)
+iex> GoogleRecaptcha.valid?(wrong_captcha_response, client_ip_addres)
 ...> false
 ```

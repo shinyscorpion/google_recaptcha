@@ -12,7 +12,7 @@ Google Recaptcha API Client for Elixir.
 
   ```elixir
   def deps do
-    [{:google_recaptcha, "~> 0.1.4"}]
+    [{:google_recaptcha, "~> 0.1.6"}]
   end
   ```
 

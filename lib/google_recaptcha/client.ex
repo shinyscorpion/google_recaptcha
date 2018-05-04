@@ -20,7 +20,7 @@ defmodule GoogleRecaptcha.Client do
     ]
 
     HTTPoison.post!(recaptcha_url(), {:form, request_body}, [], options).body
-    |> Poison.decode!
+    |> Jason.decode!
     |> parse_response
   end
 

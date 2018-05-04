@@ -8,7 +8,7 @@ defmodule GoogleRecaptchaTest do
   describe "verify" do
     test "returns :ok when captcha is correct" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => true, "challenge_ts" => "2017-06-30T15:45:07Z", "hostname" => "localhost"})}
+        %{body: Jason.encode!(%{"success" => true, "challenge_ts" => "2017-06-30T15:45:07Z", "hostname" => "localhost"})}
       end
 
       assert :ok == verify(@captcha_response, @remote_ip)
@@ -16,7 +16,7 @@ defmodule GoogleRecaptchaTest do
 
     test "returns :error when captcha is wrong" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-input-response"]})}
+        %{body: Jason.encode!(%{"success" => false, "error-codes" => ["invalid-input-response"]})}
       end
 
       assert {:error, :invalid_captcha} == verify(@captcha_response, @remote_ip)
@@ -24,7 +24,7 @@ defmodule GoogleRecaptchaTest do
 
     test "returns :error when secret is invalid" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-input-secret"]})}
+        %{body: Jason.encode!(%{"success" => false, "error-codes" => ["invalid-input-secret"]})}
       end
 
       assert {:error, :invalid_secret} == verify(@captcha_response, @remote_ip)
@@ -32,7 +32,7 @@ defmodule GoogleRecaptchaTest do
 
     test "returns :error when secret does not match public key" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-keys"]})}
+        %{body: Jason.encode!(%{"success" => false, "error-codes" => ["invalid-keys"]})}
       end
 
       assert {:error, :invalid_keys} == verify(@captcha_response, @remote_ip)
@@ -40,7 +40,7 @@ defmodule GoogleRecaptchaTest do
 
     test "returns generic :error when recaptcha error is not caught" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["unknown-error"]})}
+        %{body: Jason.encode!(%{"success" => false, "error-codes" => ["unknown-error"]})}
       end
 
       assert {:error, :recaptcha_error} == verify(@captcha_response, @remote_ip)
@@ -50,7 +50,7 @@ defmodule GoogleRecaptchaTest do
   describe "valid?" do
     test "returns true when captcha is correct" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => true, "challenge_ts" => "2017-06-30T15:45:07Z", "hostname" => "localhost"})}
+        %{body: Jason.encode!(%{"success" => true, "challenge_ts" => "2017-06-30T15:45:07Z", "hostname" => "localhost"})}
       end
 
       assert valid?(@captcha_response, @remote_ip)
@@ -66,7 +66,7 @@ defmodule GoogleRecaptchaTest do
 
     test "returns false when captcha is wrong" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-input-response"]})}
+        %{body: Jason.encode!(%{"success" => false, "error-codes" => ["invalid-input-response"]})}
       end
 
       refute valid?(@captcha_response, @remote_ip)
@@ -74,7 +74,7 @@ defmodule GoogleRecaptchaTest do
 
     test "returns false when secret key is wrong" do
       :meck.expect HTTPoison, :post!, fn(_url, _param, _h, _o) ->
-        %{body: Poison.encode!(%{"success" => false, "error-codes" => ["invalid-input-secret"]})}
+        %{body: Jason.encode!(%{"success" => false, "error-codes" => ["invalid-input-secret"]})}
       end
 
       refute valid?(@captcha_response, @remote_ip)

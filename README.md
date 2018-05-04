@@ -1,5 +1,9 @@
 # Google Recaptcha
 
+[![Hex.pm](https://img.shields.io/hexpm/v/google_recaptcha.svg "Hex")](https://hex.pm/packages/google_recaptcha)
+[![Build Status](https://travis-ci.org/shinyscorpion/google_recaptcha.svg?branch=master)](https://travis-ci.org/shinyscorpion/google_recaptcha)
+[![Inline docs](http://inch-ci.org/github/shinyscorpion/google_recaptcha.svg?branch=master)](http://inch-ci.org/github/shinyscorpion/google_recaptcha)
+
 Google Recaptcha API Client for Elixir.
 
 ## Installation

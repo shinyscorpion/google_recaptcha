@@ -1,0 +1,18 @@
+sudo: true
+language: elixir
+elixir:
+  - 1.4.4
+otp_release:
+  - 19.3
+matrix:
+  include:
+    - elixir: 1.4.4
+      otp_release: 19.3
+    - elixir: 1.6.0
+      otp_release: 20.0
+after_script:
+  - mix inch.report
+cache:
+  directories:
+    - _build
+    - deps

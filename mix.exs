@@ -51,7 +51,7 @@ defmodule GoogleRecaptcha.Mixfile do
   defp deps do
     [
       {:httpoison, ">= 0.12.0"},
-      {:poison, ">= 1.0.0"},
+      {:jason, ">= 1.0.0"},
 
       # dev/test
       {:analyze, ">= 0.0.0", only: [:dev, :test], runtime: false, override: true},

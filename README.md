@@ -12,7 +12,7 @@ Google Recaptcha API Client for Elixir.
 
   ```elixir
   def deps do
-    [{:google_recaptcha, "~> 0.1.6"}]
+    [{:google_recaptcha, "~> 0.2.0"}]
   end
   ```
 
@@ -29,7 +29,7 @@ config :google_recaptcha,
   api_url: "https://www.google.com/recaptcha/api/siteverify",
   public_key: "YOUR_PUBLIC_KEY",
   secret_key: "YOUR_SECRET_KEY",
-  enabled: true # You may set false for development
+  enabled: true # You may set false for development
 ```
 
 ## Documentation

@@ -4,10 +4,10 @@ defmodule GoogleRecaptcha.Mixfile do
   def project do
     [
       app: :google_recaptcha,
-      version: "0.1.6",
-      elixir: "~> 1.4",
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      version: "0.2.0",
+      elixir: "~> 1.10",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
       description: "Google Recaptcha API Client",
@@ -15,22 +15,21 @@ defmodule GoogleRecaptcha.Mixfile do
       # Docs
       name: "Google Recaptcha",
       source_url: "https://github.com/shinyscorpion/google_recaptcha",
-      docs:
-      [
+      docs: [
         main: "GoogleRecaptcha",
-        extras: ["README.md"],
+        extras: ["README.md"]
       ],
 
       # Test
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
       dialyzer: [
-        ignore_warnings: "dialyzer.ignore-warnings",
+        ignore_warnings: ".dialyzer",
         plt_add_deps: true
       ]
     ]
@@ -39,23 +38,29 @@ defmodule GoogleRecaptcha.Mixfile do
   defp package do
     [
       licenses: ["MIT"],
-      maintainers: ["Elliott Hilaire", "Francesco Grammatico", "Ian Luites", "Ricardo Perez", "Tatsuya Ono"],
+      maintainers: [
+        "Elliott Hilaire",
+        "Francesco Grammatico",
+        "Ian Luites",
+        "Ricardo Perez",
+        "Tatsuya Ono"
+      ],
       links: %{"GitHub" => "https://github.com/shinyscorpion/google_recaptcha"}
     ]
   end
 
   def application do
-    [applications: [:logger, :httpoison]]
+    [applications: [:logger], mod: {GoogleRecaptcha.Application, []}]
   end
 
   defp deps do
     [
-      {:httpoison, ">= 0.12.0"},
-      {:jason, ">= 1.0.0"},
+      {:hackney, ">= 0.16.0"},
+      {:jason, ">= 1.2.0"},
 
       # dev/test
       {:analyze, ">= 0.0.0", only: [:dev, :test], runtime: false, override: true},
-      {:meck, "~> 0.8", only: :test},
+      {:meck, "~> 0.9", only: :test}
     ]
   end
 end

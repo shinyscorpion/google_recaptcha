@@ -50,13 +50,27 @@ defmodule GoogleRecaptcha do
       {:error, :invalid_keys}
 
   """
-  @spec verify(String.t, String.t | nil) :: :ok | {:error, atom}
-  def verify(captcha_response, remote_ip \\ nil) do
-    Client.verify(captcha_response, remote_ip)
-  end
+  @spec verify(captcha_response :: String.t(), remote_ip :: :inet.ip_address() | String.t() | nil) ::
+          :ok
+          | {:error,
+             :missing_secret
+             | :invalid_secret
+             | :missing_captcha
+             | :invalid_captcha
+             | :captcha_request_failed
+             | :captcha_expired
+             | :invalid_keys
+             | :unmapped_captcha_error
+             | :unknown_captcha_error
+             | :request_failed
+             | :invalid_request_response}
+  def verify(captcha_response, remote_ip \\ nil), do: Client.verify(captcha_response, remote_ip)
 
-  @doc """
+  @doc ~S"""
   Check if the given captcha is correct, returns `true` if is valid, otherwise `false`.
+
+  The captcha_response is usually set in the `"g-recaptcha-response"` parameter.
+  A remote_ip can be passed to verify based on client IP.
 
   For specific and detailed error, check `verify/2`.
 
@@ -71,27 +85,32 @@ defmodule GoogleRecaptcha do
       false
 
   """
-  @spec valid?(String.t, String.t | nil) :: boolean
-  def valid?(captcha_response, remote_ip \\ nil) do
-    if enabled?() do
-      verify(captcha_response, remote_ip) == :ok
-    else
-      true
-    end
-  end
+  @spec valid?(
+          captcha_response :: String.t(),
+          remote_ip :: :inet.ip_address() | String.t() | nil
+        ) :: boolean
+  def valid?(captcha_response, remote_ip \\ nil),
+    do: not enabled?() or verify(captcha_response, remote_ip) == :ok
 
-  @doc"""
+  @doc ~S"""
   Helper function to check if the captcha is enabled.
 
   Used for development purpouse, captcha is enabled by default.  You can change it overriding the Recaptcha configuration:
 
       # config/dev.exs
       config :google_recaptcha, enabled: false
+
+  ## Example
+
+  ```elixir
+  iex> GoogleRecaptcha.enabled?()
+  false
+  ```
   """
   @spec enabled? :: boolean
-  def enabled?, do: Application.get_env(:google_recaptcha, :enabled, true)
+  def enabled?, do: Client.enabled?()
 
-  @doc"""
+  @doc ~S"""
   Public key to be used in google recaptcha widget.
 
   You can set the public key simply setting the recaptcha configuration:
@@ -100,7 +119,14 @@ defmodule GoogleRecaptcha do
       config :google_recaptcha, public_key: "YOUR_PUBLIC_KEY"
 
   For more information how to generate/display the recaptcha widget, check [here](https://developers.google.com/recaptcha/docs/display#auto_render).
+
+  ## Example
+
+  ```elixir
+  iex> GoogleRecaptcha.public_key()
+  "..."
+  ```
   """
-  @spec public_key :: String.t
-  def public_key, do: Application.get_env(:google_recaptcha, :public_key)
+  @spec public_key :: String.t()
+  def public_key, do: Client.public_key()
 end

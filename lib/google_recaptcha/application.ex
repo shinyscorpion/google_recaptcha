@@ -161,7 +161,7 @@ defmodule GoogleRecaptcha.Application do
              if attempts > unquote(retries) do
                require Logger
 
-               Logger.warn(fn -> "GoogleRecaptcha: Request Failed: #{inspect(err)}" end,
+               Logger.warning(fn -> "GoogleRecaptcha: Request Failed: #{inspect(err)}" end,
                  error: err
                )
 
